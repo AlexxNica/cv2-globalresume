@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CV 2.0 Specification v 0.1 Working Draft</title>
+<meta charset='utf-8'>
+<script src='https://www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
+<script class='remove'>
+  var respecConfig = {
+      specStatus: "CG-DRAFT",
+      shortName:  "cv2",
+      editors: [
+      {   name:       "Sanja Bonic",
+          url:        "http://thoughtkettle.com",
+      }
+      ],
+      previousMaturity: "-",
+      previousPublishDate:  "-",
+      wg:           "CV 2.0 - Global Resume Community Group",
+      wgURI:        "https://www.w3.org/community/cv2/",
+      wgPublicList: "public-cv2",
+      wgPatentURI:  "-",
+  };
+</script>
+</head>
+
+<body>
+<section id='abstract'>
+<p>This specification defines the CV 2.0 and gives recommendations for further usage.</p>
+</section>
+
+<section id='sotd'>
+<p></p>
+</section>
+
+<p>Copyright © 2015 the Contributors to the CV 2.0 - Global Resume, published by the <a href="https://www.w3.org/community/cv2/">CV 2.0 - Global Resume Community Group</a> under the <a href="http://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available.</p>
+
+<section>
+<h2>Introduction</h2>
+</section>
+
+<section>
+<h2>Definition</h2>
+<p>We define a CV 2.0 as follows:</p>
+<ul>
+<li>screen: zoomable and still readable at a standard resolution in fullscreen (1280px width)
+<li>representing the main parts (professional experience and skills) with 1­3 visualization techniques that convey the information that would have otherwise been presented in textual form
+<li>no hovering​ elements
+<li>no animations
+<li>avoid dark colors​ for background elements
+</ul>
+<p>In essence, a CV 2.0 file is a machine- and human-readable file that supports more efficient creation, editing, and information processing of resumes. CV 2.0 is a general term for the concept of a global resume as well as the actual files used.</p>
+</section>
+
+<section>
+<h1>Syntax</h1>
+<h2>\\ 2 backslashes for section start</h2>
+<pre style="background: #fffef5;padding: 25px">
+  \\ Personal
+...
+
+\\ Professional
+...
+
+\\ Education
+...
+
+\\ Skills
+...
+
+\\ Personal
+...
+</pre>
+
+<p>Additional information for a section can be added anywhere into the .cv2. The parser will recognize everything from a beginning \\ to the next \\ as one section. If two sections are the same, the properties will be recognized as belonging to the same section. Newer (i.e. further down in the file) values will replace older values if they address the same tag, much like cascading stylesheets.</p>
+
+<h2>/* comments */</h2>
+<p>As usual in many programming languages, comments can be added in between a slash, asterisk - asterisk, slash combination. Example:</p>
+<pre style="background: #fffef5;padding: 25px">/* comments optional - filename: john_doe_timestamp.cv2 */</pre>
+
+<h2>\{} Special Characters and Escaping Characters</h2>
+<pre style="background: #fffef5;padding: 25px">/* a name with umlaut as an example of how to escape characters */
+fullname: John D\{"o}e
+</pre>
+<p>The above example syntax is borrowed from LaTeX, although Umlauts and other symbols should be recognized. There might still be a need to escape, for example, company names with two backslashes in them or other names that interfere with the .cv2 syntax. Anything that is input via a form needs to be sanitized and escaped correctly.</p>
+
+<h2>"Values spanning<br>
+<h2>several lines"</h2>
+<p>As newline is our ending character, we need a sign to tell the parser that a value spans several lines. Example:</p>
+<pre style="background: #fffef5;padding: 25px">
+j1.description: "this text spans several lines and is rendered similar
+to the pre tag in HTML - preserving line breaks"</pre>
+<mark>[] Enumerations and Value Ranges</mark>
+<p>Enumerations and value ranges are important for custom tags that are defined by the user and have no defined meaning as well as value ranges for skills in order to create visualizations and charts. Example:</p>
+<pre style="background: #fffef5;padding: 25px">
+\\ Skills
+CSS AS css
+Java AS java
+Project Managemenet AS pm
+
+scale1: [0-100]
+scale2: [Beginner, Intermediate, Expert]
+
+css.level: \{scale1:67}
+css.category: markup languages
+
+java.level: \{scale1:85}
+java.category: programming languages
+
+pm.level: \{scale2:Expert}
+pm.category: organizational
+</pre>
+<p>Enumerations and value ranges are created using <mark>name: [x-y]</mark> for value ranges or <mark>name: [a, b, c, d, …]</mark> for enumerations and must be created before their first reference. They can be addressed via the usual escaping/referencing syntax:</p>
+<mark>\{name:value}</mark>
+
+<h1>Tag Names</h1>
+<ul>fullname
+<li>faoname
+<li>email
+<li>birthDate
+<li>birthLocation
+<li>citizenship
+<li>dateStart
+<li>dateEnd
+<li>name
+<li>role
+<li>description
+<li>degree
+<li>level
+<li>category
+<li>...
+<li>...
+</ul>
+
+<h2>faoname</h2>
+<p>faoname stands for "For Attention Of" as used in letters and is used to designate the proper salutation. We cannot use first and last name since many cultures around the world use a different concept and people need their full name on their resume as well as some option to tell how they would prefer to be addressed.</p>
+
+<h2>Multi-Tag Properties</h2>
+<p>Some properties have multiple tags, such as jobs and education. The choice is to either group them in parentheses, making them harder to separate or concatenate anywhere else in the document and also harder to read eventually. So the approach is to treat them similarly to objects in a programming language, addressing the property followed by a dot and the tag. Example:</p>
+<pre style="background: #fffef5;padding: 25px">
+j1.name: Some Company Name
+</pre>
+
+<h2>Aliases</h2>
+<p>The Alias concept has been borrowed from SQL and can be used for any multi-tag properties. Aliases must be created for user-defined properties such as skills or custom tags. Example:</p>
+<pre style="background: #fffef5;padding: 25px">
+job1 AS j1
+
+j1.name: Some Company Name
+j1.dateStart: date in format dd.mm.yyyy
+</pre>
+
+<h2>Cross-References</h2>
+<p>Cross-referencing is very important for the visualizations so additional links can be clearly shown and visualized in various ways, for examples skills can be linked to jobs or jobs to education, etc.:</p>
+<pre style="background: #fffef5;padding: 25px">j2.description: "created blah, e-mail me: \{email}"
+j2.additionalInfo: some more blah, had a contract for \{j1} while doing this</pre>
+<p>The syntax for cross-references is <mark>\{tagname}</mark> including the cross-referenced tag name in the curly brackets.</p>
+
+<h2>URLs and External Files</h2>
+<p>URLs and external files like pictures and logos can be added to a .cv2 using <mark>\{externaltag}</mark> where "externaltag" for now only has the options of <mark>url:</mark>, <mark>mailto:</mark>, and <mark>file:</mark>. Example:</p>
+<pre style="background: #fffef5;padding: 25px">j2.description: "created \{url:http://blabla.org} in this job,
+email to \{mailto:myaddress@here.com} for questions"</pre>
+</section>
+
+<section>
+<h1>Recommendations</h1>
+TBD
+</section>
+
+<section>
+<h1>Privacy</h1>
+TBD
+<p>opt-in to keep files on server via registration, otherwise delete automatically and do not request real data to be input</p>
+</section>
+
+<section>
+<h1>Security</h1>
+TBD
+<p>Any input handled via a form needs to be sanitized properly.</p>
+</section>
+</body>
+</html>
